@@ -57,7 +57,8 @@ CREATE TABLE pago(
     forma_pago VARCHAR(40)NOT NULL,
     id_transaccion VARCHAR(50) NOT NULL PRIMARY KEY,
     fecha_pago DATE NOT NULL,
-    total DECIMAL (15,2)
+    total DECIMAL (15,2),
+    FOREIGN KEY (codigo_cliente) REFERENCES cliente(codigo_cliente)
 );
 
 CREATE TABLE pedido(
@@ -971,3 +972,23 @@ SELECT * FROM producto WHERE gama = 'Ornamentales' AND cantidad_en_stock>100 ORD
 
 -- Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30.
 SELECT * FROM cliente WHERE ciudad='Madrid' AND (codigo_empleado_rep_ventas=11 OR codigo_empleado_rep_ventas=30);
+
+-- multivaluados
+
+-- Obtén un listado con el nombre de cada cliente y el nombre y apellido de su representante de ventas.
+SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado, empleado.apellido1 FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas =empleado.codigo_empleado ;
+
+-- Muestra el nombre de los clientes que hayan realizado pagos junto con el nombre de sus representantes de ventas.
+SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado FROM cliente INNER JOIN pago ON pago.codigo_cliente=cliente.codigo_cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas=empleado.codigo_empleado;
+
+-- Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado,oficina.ciudad FROM cliente INNER JOIN pago ON pago.codigo_cliente=cliente.codigo_cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas=empleado.codigo_empleado INNER JOIN oficina ON oficina.codigo_oficina = empleado.codigo_oficina;
+
+-- Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado,oficina.ciudad FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas=empleado.codigo_empleado INNER JOIN oficina ON oficina.codigo_oficina = empleado.codigo_oficina WHERE codigo_cliente NOT IN (SELECT codigo_cliente FROM pago);
+
+
+-- Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
+
+
+select * from oficina;
