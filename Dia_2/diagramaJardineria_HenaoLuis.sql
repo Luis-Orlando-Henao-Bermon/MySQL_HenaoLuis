@@ -945,6 +945,8 @@ SELECT DISTINCT estado FROM pedido;
 -- Utilizando la función DATE_FORMAT de MySQL.
 -- Sin utilizar ninguna de las funciones anteriores.
 SELECT DISTINCT codigo_cliente FROM pago WHERE YEAR(fecha_pago)=2008; 
+SELECT DISTINCT codigo_cliente FROM pago WHERE DATE_FORMAT(fecha_pago,'%Y')=2008; 
+SELECT DISTINCT codigo_cliente FROM pago WHERE fecha_pago >= '2008-01-01' AND fecha_pago < '2009-01-01'; 
 
 -- Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
 SELECT codigo_pedido, codigo_cliente,fecha_esperada, fecha_entrega FROM pedido WHERE fecha_entrega > fecha_esperada;
@@ -953,6 +955,9 @@ SELECT codigo_pedido, codigo_cliente,fecha_esperada, fecha_entrega FROM pedido W
 -- Utilizando la función ADDDATE de MySQL.
 -- Utilizando la función DATEDIFF de MySQL.
 -- ¿Sería posible resolver esta consulta utilizando el operador de suma + o resta -?
+
+SELECT codigo_pedido, codigo_cliente,fecha_esperada, fecha_entrega FROM pedido WHERE fecha_entrega <= ADDDATE(fecha_esperada, -2);
+SELECT codigo_pedido, codigo_cliente,fecha_esperada, fecha_entrega FROM pedido WHERE DATEDIFF(fecha_esperada, fecha_entrega) >= 2;
 SELECT codigo_pedido, codigo_cliente,fecha_esperada, fecha_entrega FROM pedido WHERE fecha_entrega + 2 <= fecha_esperada;
 
 -- Devuelve un listado de todos los pedidos que fueron en 2009.
@@ -971,7 +976,7 @@ SELECT DISTINCT forma_pago FROM pago;
 SELECT * FROM producto WHERE gama = 'Ornamentales' AND cantidad_en_stock>100 ORDER BY precio_venta DESC;
 
 -- Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30.
-SELECT * FROM cliente WHERE ciudad='Madrid' AND (codigo_empleado_rep_ventas=11 OR codigo_empleado_rep_ventas=30);
+SELECT * FROM cliente WHERE ciudad='Madrid' AND (codigo_empleado_rep_ventas=11 OR codigo_empleado_rep_ventas=30);	
 
 -- multivaluados
 
@@ -987,8 +992,19 @@ SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado,oficina.ciudad
 -- Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
 SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado,oficina.ciudad FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas=empleado.codigo_empleado INNER JOIN oficina ON oficina.codigo_oficina = empleado.codigo_oficina WHERE codigo_cliente NOT IN (SELECT codigo_cliente FROM pago);
 
-
 -- Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
+SELECT oficina.linea_direccion1, oficina.linea_direccion2 FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas=empleado.codigo_empleado INNER JOIN oficina ON empleado.codigo_oficina= oficina.codigo_oficina WHERE cliente.ciudad='Fuenlabrada';
 
+-- Devuelve el nombre de los clientes y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado, oficina.ciudad AS oficina_representante FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas = empleado.codigo_empleado INNER JOIN oficina ON empleado.codigo_oficina=oficina.codigo_oficina;
 
-select * from oficina;
+-- Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
+SELECT e.nombre AS nombre_empleado, j.nombre AS nombre_jefe FROM empleado j INNER JOIN empleado e ON j.codigo_jefe=e.codigo_empleado;
+
+-- Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
+SELECT e.nombre AS nombre_empleado, j.nombre AS nombre_jefe,jj.nombre AS nombre_jefe_jefe FROM empleado j INNER JOIN empleado e ON j.codigo_jefe=e.codigo_empleado INNER JOIN empleado jj ON jj._codigo_jefe=j.codigo_jefe;
+-- Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
+
+-- Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
+
+select * from empleado;
