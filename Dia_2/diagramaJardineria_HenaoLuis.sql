@@ -999,12 +999,18 @@ SELECT oficina.linea_direccion1, oficina.linea_direccion2 FROM cliente INNER JOI
 SELECT cliente.nombre_cliente, empleado.nombre AS nombre_empleado, oficina.ciudad AS oficina_representante FROM cliente INNER JOIN empleado ON cliente.codigo_empleado_rep_ventas = empleado.codigo_empleado INNER JOIN oficina ON empleado.codigo_oficina=oficina.codigo_oficina;
 
 -- Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
-SELECT e.nombre AS nombre_empleado, j.nombre AS nombre_jefe FROM empleado j INNER JOIN empleado e ON j.codigo_jefe=e.codigo_empleado;
+SELECT e.nombre AS nombre_empleado, j.nombre AS nombre_jefe FROM empleado j INNER JOIN empleado e ON e.codigo_jefe=j.codigo_empleado;
 
 -- Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
-SELECT e.nombre AS nombre_empleado, j.nombre AS nombre_jefe,jj.nombre AS nombre_jefe_jefe FROM empleado j INNER JOIN empleado e ON j.codigo_jefe=e.codigo_empleado INNER JOIN empleado jj ON jj._codigo_jefe=j.codigo_jefe;
+select empleado.nombre as empleado,jefe.nombre as jefe, jefe_jefe.nombre as 'Jefe del deje' from empleado empleado inner join empleado jefe on empleado.codigo_jefe= jefe.codigo_empleado inner join empleado jefe_jefe on jefe.codigo_jefe=jefe_jefe.codigo_empleado;
+
 -- Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
+select cliente.nombre_cliente from pedido inner join cliente on pedido.codigo_cliente=cliente.codigo_cliente where pedido.fecha_entrega>pedido.fecha_esperada; 
 
 -- Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
+select distinct cliente.nombre_cliente, producto.gama from pedido inner join detalle_pedido dp on pedido.codigo_pedido = dp.codigo_pedido inner join producto on dp.codigo_producto= producto.codigo_producto inner join cliente on pedido.codigo_cliente=cliente.codigo_cliente; 	
 
-select * from empleado;
+select * from cliente;
+select * from producto;
+select * from detalle_pedido;
+select * from pedido;
