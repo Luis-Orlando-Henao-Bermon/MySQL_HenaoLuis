@@ -327,6 +327,6 @@ inner join alumno_se_matricula_asignatura asm on curso_escolar.id= asm.id_curso_
 imparten ninguna asignatura. El resultado mostrará cinco columnas: id, nombre, primer apellido, segundo apellido y número de asignaturas. 
 El resultado estará ordenado de mayor a menor por el número de asignaturas.*/
 
-select p.id, p.nombre, p.apellido1,p.apellido2, count(asignatura.id_profesor) from profesor p 
+select p.id, p.nombre, p.apellido1,p.apellido2, count(asignatura.id_profesor) as 'Numero de asignaturas' from profesor p 
 left join asignatura on p.id= asignatura.id_profesor 
-group by p.id, p.nombre, p.apellido1,p.apellido2;
+group by 1,2,3,4 order by 5 desc;
