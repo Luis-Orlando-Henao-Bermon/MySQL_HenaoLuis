@@ -312,7 +312,7 @@ inner join asignatura on asignatura.id_grado=grado.id group by 1 having count(as
  El resultado debe tener tres columnas: nombre del grado, tipo de asignatura y la suma de los créditos de todas las asignaturas que hay de ese tipo. 
  Ordene el resultado de mayor a menor por el número total de crédidos.*/
 
-select grado.nombre, asignatura.tipo, sum(asignatura.creditos), count(asignatura.tipo) as total_creditos from grado 
+select grado.nombre, asignatura.tipo, sum(asignatura.creditos) as total_creditos from grado 
 inner join asignatura on grado.id=asignatura.id_grado 
 group by grado.nombre, asignatura.tipo;
 
