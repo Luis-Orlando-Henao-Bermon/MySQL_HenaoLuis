@@ -361,9 +361,13 @@ where asignatura.id_profesor is null ;
 select * from asignatura 
 where id_profesor is not  null;
 
+/*Devuelve un listado con todos los departamentos que no han impartido asignaturas en ningún curso escolar.*/
 
--- imposible
-
+select distinct d.nombre from departamento d 
+inner join profesor p on d.id =p.id_departamento
+inner join asignatura a on p.id =a.id_profesor 
+left join alumno_se_matricula_asignatura asm on a.id = asm.id_asignatura
+where a.id not in (select id_asignatura from alumno_se_matricula_asignatura);
 
 /*Devuelve un listado con el nombre de todos los departamentos que tienen profesores que imparten alguna asignatura
  en el Grado en Ingeniería Informática (Plan 2015).*/
@@ -406,13 +410,5 @@ El resultado debe mostrar el nombre del departamento y el nombre de la asignatur
 select d.nombre, a.nombre from departamento d 
 inner join profesor p on d.id =p.id_departamento
 inner join asignatura a on p.id =a.id_profesor 
-where a.id not in (select id_asignatura from alumno_se_matricula_asignatura);
-
-/*Devuelve un listado con todos los departamentos que no han impartido asignaturas en ningún curso escolar.*/
-
-select distinct d.nombre from departamento d 
-inner join profesor p on d.id =p.id_departamento
-inner join asignatura a on p.id =a.id_profesor 
-left join alumno_se_matricula_asignatura asm on a.id = asm.id_asignatura
 where a.id not in (select id_asignatura from alumno_se_matricula_asignatura);
  
