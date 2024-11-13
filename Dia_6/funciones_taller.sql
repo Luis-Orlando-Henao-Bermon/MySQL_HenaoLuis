@@ -310,10 +310,11 @@ select d.* from empleado e right join  departamento d on d.id=e.id_departamento 
 -- tienen ningún empleado asociado. Ordene el listado alfabéticamente por el nombre del departamento.
 
 select * from departamento 
-left join empleado on departamento.id = empleado.id_departamento
+left join empleado on departamento.id = empleado.id_departamento 
 union
 select * from departamento 
-right join empleado on departamento.id = empleado.id_departamento; -- (sql no soporta full join directamente por tanto hay que hacer left y right join )
+right join empleado on departamento.id = empleado.id_departamento
+order by 2; -- (sql no soporta full join directamente por tanto hay que hacer left y right join )
 
 -- 5. Devuelve un listado con los empleados que no tienen ningún departamento asociado y los departamentos que no 
 -- tienen ningún empleado asociado. Ordene el listado alfabéticamente por el nombre del departamento.
@@ -324,7 +325,8 @@ where empleado.id_departamento is null
 union
 select * from departamento 
 right join empleado on departamento.id = empleado.id_departamento
-where empleado.id_departamento is null;
+where empleado.id_departamento is null
+order by 2;
 
 
 -- consultas resumen 
