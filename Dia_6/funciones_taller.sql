@@ -370,10 +370,10 @@ select d.nombre, count(e.id_departamento) as 'Numero de empleados' from departam
 -- 10. Calcula el nombre de los departamentos con más de 2 empleados. El resultado debe tener dos columnas:
 -- el nombre del departamento y el número de empleados asignados.
 
-select d.nombre, count(e.id_departamento) as 'Numero de empleados' from departamento d 
+select d.nombre, count(e.id_departamento) as 'Numero_de_empleados' from departamento d 
 inner join empleado e on d.id=e.id_departamento 
 group by d.nombre 
-having count(e.id_departamento)>2 ;
+having Numero_de_empleados>2 ;
 
 -- 11. Calcula el número de empleados en cada departamento, incluyendo aquellos departamentos sin ningún empleado asignado.
 
