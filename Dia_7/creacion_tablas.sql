@@ -11,15 +11,15 @@ create table cliente(
 	apellidos varchar(50) not null,
 	direccion varchar(150) not null,
 	ciudad_residencia varchar(40) not null,
-	telefono_celular int(15) not null,
+	telefono_celular bigint not null,
 	correo_electronico varchar(80) not null
 );
 create table sucursal(
 	id int primary key not null,
 	direccion varchar(150) not null,
 	ciudad varchar(40) not null,
-	telefono_fijo int(15) not null,
-	telefono_celular int(15) not null,
+	telefono_fijo bigint not null,
+	telefono_celular bigint not null,
 	correo_electronico varchar(80) not null
 );
 
@@ -31,7 +31,7 @@ create table empleado(
 	apellidos varchar(50) not null,
 	direccion varchar(150) not null,
 	ciudad_residencia varchar(40) not null,
-	telefono_celular int(15) not null,
+	telefono_celular bigint not null,
 	correo_electronico varchar(80) not null,
 	foreign key (id_sucursal) references sucursal(id)
 );
@@ -57,7 +57,7 @@ create table vehiculo(
 	id_tipo int not null,
 	id_sucursal int,
 	placa varchar(6) not null,
-	referencia varchar(20) not null,
+	referencia varchar(50) not null,
 	modelo varchar(30) not null,
 	puertas int not null,
 	capacidad int not null,
@@ -86,3 +86,4 @@ create table alquiler (
     foreign key (id_sucursal_salida) references sucursal(id),
     foreign key (id_sucursal_llegada) references sucursal(id)
 );
+
