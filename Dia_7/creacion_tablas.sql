@@ -6,7 +6,7 @@ use AutoRenta;
 
 create table cliente(
 	id int primary key not null,
-	celula int(15) not null,
+	cedula int(15) not null,
 	nombre1 varchar(50) not null,
 	nombre2 varchar(50),
 	apellido1 varchar(50) not null,
