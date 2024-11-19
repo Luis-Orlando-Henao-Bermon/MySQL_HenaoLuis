@@ -88,7 +88,7 @@ BEGIN
     set dias_retraso=timestampdiff(day,fecha_esperada,fecha_llegada);
     
     
-    if dias_retraso>1 then 
+    if dias_retraso>=1 then 
 		set valor_dias_retraso=dias_retraso*valor_diario_retraso;
     else
 		set valor_dias_retraso=0;
@@ -281,3 +281,140 @@ select e.*,count(a.id_empleado) as Cantidad_alquileres from empleado e inner joi
 
 -- 25. Lista los nombres de los clientes junto con cuantos alquileres ha realizado
 select count(a.id_cliente) as cantidad_alquileres,c.nombre1,c.nombre2 from cliente c inner join alquiler a on c.id=a.id_cliente group by 2,3;
+
+
+-- PROCEDIMIENTOS---------------------------------------------------------------------
+
+-- asignar valor_cotizado a un alquiler 
+delimiter // 
+create procedure asignar_valor_cotizado(in id_alquiler int,in valor_cotizadoP decimal(10,2))
+begin
+   
+	update alquiler	set valor_cotizado=valor_cotizadoP where id=id_alquiler;
+end
+// delimiter ;
+
+call asignar_valor_cotizado(2,(select valor_cotizado(id_vehiculo,fecha_salida,fecha_esperada) from alquiler where id=2)) ;
+
+
+-- corregir todos los valores cotizados de la tabla alquiler
+
+delimiter // 
+create procedure asignar_todos_valores_cotizados()
+begin
+	declare contador int default 1;
+
+	while contador<(select count(*) from alquiler)+1 do
+
+	   call asignar_valor_cotizado(contador,(select valor_cotizado(id_vehiculo,fecha_salida,fecha_esperada) from alquiler where id=contador));
+	   set contador=contador+1;
+
+	end while;
+end
+// delimiter ;
+
+call asignar_todos_valores_cotizados();
+
+
+-- asignar valor_pagado a un alquiler
+
+delimiter //
+create procedure asiganar_valor_pagado(in id_alquiler int,in valor_pagadoP decimal(10,2))
+begin
+	update alquiler	set valor_pagado=valor_pagadoP where id=id_alquiler;
+end // delimiter ;
+
+call asiganar_valor_pagado(1,(select valor_final(id_vehiculo,fecha_salida,fecha_esperada,fecha_llegada) from alquiler where id=1));
+
+
+-- corregir todos los valores pagados de la tabla alquiler
+
+delimiter // 
+create procedure asignar_todos_valores_pagados()
+begin
+	declare contador int default 1;
+
+	while contador<(select count(*) from alquiler)+1 do
+
+	   call asiganar_valor_pagado(contador,(select valor_final(id_vehiculo,fecha_salida,fecha_esperada,fecha_llegada) from alquiler where id=contador));
+	   set contador=contador+1;
+
+	end while;
+end
+// delimiter ;
+
+call asignar_todos_valores_pagados();
+
+select * from alquiler;
+
+
+-- registrar cliente 
+
+delimiter //
+create procedure registrar_cliente(
+	in p_cedula int(15),
+    in p_nombre1 varchar(50),
+    in p_nombre2 varchar(50),
+    in p_apellido1 varchar(50),
+    in p_apellido2 varchar(50),
+    in p_direccion varchar(150),
+    in p_ciudad_residencia varchar(40),
+    in p_telefono_celular bigint,
+    in p_correo_electronico varchar(80),
+    in p_user_cliente varchar(30),
+    in p_password_cliente varchar(40))
+begin 
+	insert into cliente(cedula, nombre1, nombre2, apellido1, apellido2, direccion,ciudad_residencia, telefono_celular, correo_electronico,user_cliente, password_cliente) 
+	values (p_cedula, p_nombre1, p_nombre2, p_apellido1, p_apellido2, p_direccion,p_ciudad_residencia, p_telefono_celular, p_correo_electronico,p_user_cliente, p_password_cliente);
+end
+// delimiter ;
+
+call registrar_cliente(1093904929,'Luis','Orlando','Henao','Bermon','CR 3e #1-24','Tibú',3003426875,'luis_or2454@gmail.com','Lucho03','Luchin123');
+
+
+-- registrar empleado
+delimiter //
+create procedure registrar_empleado(
+	in p_id_sucursal int,
+    in p_cedula int(15),
+    in p_nombre1 varchar(50),
+    in p_nombre2 varchar(50),
+    in p_apellido1 varchar(50),
+    in p_apellido2 varchar(50),
+    in p_direccion varchar(150),
+    in p_ciudad_residencia varchar(40),
+    in p_telefono_celular bigint,
+    in p_correo_electronico varchar(80),
+    in p_user_empleado varchar(30),
+    in p_password_empleado varchar(40))
+begin 
+	insert into empleado(id_sucursal,cedula,nombre1,nombre2,apellido1,apellido2,direccion,ciudad_residencia,telefono_celular,correo_electronico,user_empleado,password_empleado)
+    values (p_id_sucursal,p_cedula,p_nombre1,p_nombre2,p_apellido1,p_apellido2,p_direccion,p_ciudad_residencia,p_telefono_celular,p_correo_electronico,p_user_empleado,p_password_empleado);
+end // delimiter ;
+
+call registrar_empleado(4,1093909,'Luis','Migel','Caicedo','Bermon','CR 3e #1-24','Tibú',30554861,'luis_m2454@gmail.com','Lucho03','Luchin456');
+
+
+-- ingresar un nuevo alquiler 
+
+delimiter // 
+create procedure ingresar_alquiler(
+	in r_id_vehiculo int,
+    in r_id_cliente int,
+    in r_id_empleado int,
+    in r_id_sucursal_salida int,
+    in r_fecha_salida date,
+    in r_id_sucursal_llegada int,
+    in r_fecha_llegada date,
+    in r_fecha_esperada date,
+    in r_valor_cotizado decimal(10,2),
+    in r_valor_pagado decimal(10,2)
+    )
+begin
+
+	insert into alquiler(id_vehiculo,id_cliente,id_empleado,id_sucursal_salida,fecha_salida,id_sucursal_llegada,fecha_llegada,fecha_esperada,valor_cotizado,valor_pagado)
+    values (r_id_vehiculo,r_id_cliente,r_id_empleado,r_id_sucursal_salida,r_fecha_salida,r_id_sucursal_llegada,r_fecha_llegada,r_fecha_esperada,r_valor_cotizado,r_valor_pagado);
+end
+ // delimiter ;
+ 
+call ingresar_alquiler(12,41,11,1,current_date(),3,null,current_date()+9,valor_cotizado(12,current_date(),current_date()+9),null);
