@@ -345,7 +345,6 @@ end
 
 call asignar_todos_valores_pagados();
 
-select * from alquiler;
 
 
 -- registrar cliente 
@@ -418,3 +417,61 @@ end
  // delimiter ;
  
 call ingresar_alquiler(12,41,11,1,current_date(),3,null,current_date()+9,valor_cotizado(12,current_date(),current_date()+9),null);
+
+-- Registrar vehiculo
+
+delimiter // 
+create procedure registrar_vehiculo(
+	in r_id_tipo int,
+    in r_id_sucursal int,
+    in r_placa varchar(6),
+    in r_referecnia varchar(50),
+    in r_modelo varchar(30),
+    in r_puertas int,
+    in r_capacidad int,
+    in r_sunroof tinyint(1),
+    in r_motor varchar(45),
+    in r_color varchar(30))
+begin
+ insert into vehiculo(id_tipo,id_sucursal,placa,referencia,modelo,puertas,capacidad,sunroof,motor,color)
+ values(r_id_tipo,r_id_sucursal,r_placa,r_referecnia,r_modelo,r_puertas,r_capacidad,r_sunroof,r_motor,r_color);
+end
+// delimiter ;
+
+ call registrar_vehiculo(3,2,'HYR3564','Chevrolet Joy','2022',4,5,1,'5.0L', 'Rojo');
+ 
+ 
+ -- insertar tipo de vehiculo
+delimiter // 
+create procedure insertar_tipo_vehiculo(
+    in r_nombre varchar(50),
+    in r_id_descuento int,
+    in r_precio_semana decimal(10,2),
+    in r_precio_dia decimal(10,2))
+begin
+	 insert into tipo_vehiculo(nombre,id_descuento,precio_semana,precio_dia)
+     values(r_nombre,r_id_descuento,r_precio_semana,r_precio_dia);
+end
+//delimiter ;
+
+call insertar_tipo_vehiculo('4x4',7,600000.00,100000.00)
+
+
+-- insertar una nueva sucursal
+
+delimiter // 
+create procedure insertar_sucursal(
+	in r_direccion varchar(150),
+	in r_ciudad varchar(40),
+	in r_telefono_fijo bigint,
+	in r_telefono_celular bigint,
+	in r_correo_electronico varchar(80))
+begin
+
+	insert into sucursal (direccion,ciudad,telefono_fijo,telefono_celular,correo_electronico)
+    values(r_direccion,r_ciudad,r_telefono_fijo,r_telefono_celular,r_correo_electronico);
+
+end
+// delimiter ;
+
+call insertar_sucursal('CLL 5 AVN 2','Cucuta',56889532,3254875962,'autorental_cucuta@gmail.com');
