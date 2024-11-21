@@ -1,9 +1,7 @@
+drop database if exists reto_dia_9;
 create database reto_dia_9;
 
 use reto_dia_9;
-
-CREATE DATABASE ventas;
-USE ventas;
 
 CREATE TABLE cliente (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
