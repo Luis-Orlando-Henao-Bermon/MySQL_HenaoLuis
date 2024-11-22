@@ -53,7 +53,7 @@ begin
 		
 	declare cliente_mayor int;
     
-    set cliente_mayor =(select id from (select sum(total),id from pedido group by 2 order by 1 desc limit 1)as cliente_mayor_total);
+    set cliente_mayor =(select id_cliente from (select sum(total),id_cliente from pedido group by 2 order by 1 desc limit 1)as cliente_mayor_total);
         
 	return cliente_mayor;
 end // delimiter ;
